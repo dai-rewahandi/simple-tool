@@ -1,0 +1,105 @@
+---
+import '@/style/calender.sass'
+import './main.sass'
+import MainLayout from '@/layout/MainLayout.astro'
+---
+<MainLayout>
+<main>        
+    <div id="input_tanggal">
+        <!-- <label for="tanggal_1">tanggal dari</label> -->
+        <input type="text" id="tanggal_1" name="tanggal_1" placeholder="Tanggal dari" />
+        <!-- <label for="tanggal_2">tanggal ke</label> -->
+        <input type="text" id="tanggal_2" name="tanggal_2" placeholder="Tanggal ke" />
+        <!-- <label for="tanggal_2">keterangan</label> -->
+        <input type="text" id="ket" name="ket" placeholder="Keterangan" />
+        <!-- <label for="nominal">nominal per hari</label> -->
+        <input type="text" name="nominal" id="nominal" placeholder="Nominal" />
+        <button id="hitung">hitung</button>
+        <ul id="hasil"></ul>
+    </div>
+</main>
+
+</MainLaout>
+
+<script>
+    import datepicker from "js-datepicker";
+    import { Rupiah } from "@/utils/main";
+    window.addEventListener("DOMContentLoaded", () => {
+        const addLeadingZero = (num: any) => (num < 10 ? "0" + num : num);
+        const picker1 = datepicker("#tanggal_1", {
+            customDays: ['M', 'Sen', 'Sel', 'R', 'K', 'J', 'S'],
+            formatter: (input, date, instance) => {
+                const year = date.getFullYear();
+                const month = addLeadingZero(date.getMonth() + 1);
+                const day = addLeadingZero(date.getDate());
+                input.value = `${year}-${month}-${day}`;
+            },
+        });
+        const picker2 = datepicker("#tanggal_2", {
+            customDays: ['M', 'Sen', 'Sel', 'R', 'K', 'J', 'S'],            
+            formatter: (input, date, instance) => {
+                const year = date.getFullYear();
+                const month = addLeadingZero(date.getMonth() + 1);
+                const day = addLeadingZero(date.getDate());
+                input.value = `${year}-${month}-${day}`;
+            },
+        });
+
+        const tanggal_1 = document.getElementById(
+            "tanggal_1",
+        ) as HTMLInputElement;
+        const tanggal_2 = document.getElementById(
+            "tanggal_2",
+        ) as HTMLInputElement;
+        const nominalPerHari = document.getElementById(
+            "nominal",
+        ) as HTMLInputElement;
+        const ket = document.getElementById(
+            "ket",
+        ) as HTMLInputElement;
+
+
+        const hitung = document.getElementById("hitung");
+        hitung?.addEventListener("click", () => {
+            const dariTanggal = new Date(tanggal_1.value);
+            const keTanggal = new Date(tanggal_2.value);
+
+            const nominalKeNumber = Number(nominalPerHari.value);
+            if ( tanggal_1.value === '' || tanggal_2.value === '' || nominalPerHari.value === '' ) return alert('mohon isi semua input!')
+
+            const hitungSelisihMiliDEtik = Math.abs(
+                dariTanggal.getTime() - keTanggal.getTime(),
+            );
+            const milidetikPerHari = 1000 * 60 * 60 * 24;
+            const selisihHari = hitungSelisihMiliDEtik / milidetikPerHari + 1;
+
+            localStorage.setItem("berapaHari", `${selisihHari}`);
+            localStorage.setItem('ket', `${ket.value}`)
+
+            const li = document.createElement("li");
+            const hasil = document.getElementById("hasil");
+            const nominal_local = Number(localStorage.getItem("nominal"));
+            const berapaHari = Number(localStorage.getItem("berapaHari"));
+            const keterangan = localStorage.getItem('ket')
+            const totalSemua = nominal_local * berapaHari;
+            li.innerHTML = `<i>${keterangan} dalam <code>${selisihHari}</code> hari</i><b>Total yang di dapat: Rp ${Rupiah(totalSemua)}</b>`;
+            hasil?.appendChild(li);
+        });
+
+        const nominal = document.getElementById("nominal");
+        nominal?.addEventListener("change", () => {
+            const dapatkanNominal = document.getElementById(
+                "nominal",
+            ) as HTMLInputElement;
+            const checkInput = /[^0-9]/
+            const ok = checkInput.test(dapatkanNominal.value)
+            if (ok) {
+                alert('pastikan hanya angka')
+                nominal.value = '';
+            }
+            const nominalSebagaiNumber: number = Number(dapatkanNominal?.value);
+            localStorage.setItem("nominal", `${nominalSebagaiNumber}`);
+            nominal.value = Rupiah(nominalSebagaiNumber);
+        });
+    });
+</script>
