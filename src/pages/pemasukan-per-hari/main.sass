@@ -1,4 +1,4 @@
-@use './src/style/color'
+@use './src/style/var'
 main 
 	width: 100%
 	min-height: calc(100% - 56px)
@@ -16,33 +16,35 @@ main
 		input[type='text']
 			width: 100%
 			height: 48px
-			border-radius: 12px
+			border-radius: var.$radius
 			font-weight: bold
 			font-size: 14px
 			border: none
 			padding: 0 1em
 			margin: 0 0 .5em 0
-			background: color.$semi_gray
+			background: var.$semi_gray
 			&:focus
-				outline: 2px solid color.$main_color
-		#hitung
+				outline: 2px solid var.$main_color
+		#button_hitung
 			height: 48px
-			border-radius: 12px
+			border-radius: var.$radius
 			border: none
 			cursor: pointer
 			font-size: 16px
 			font-weight: bold
-			background: color.$semi_gray
+			background: var.$semi_gray
 			&:hover 
-				background: color.$main_color
+				background: var.$main_color
 				color: #fff
-		#hasil
+		#loader_hasil
 			margin: 2em 0em 0em 0em
+			display: flex
+			flex-direction: column-reverse
 			list-style-type: none
 			li
 				background: #f0f0f0
 				height: 60px
-				border-radius: 12px
+				border-radius: var.$radius
 				display: flex
 				flex-direction: column
 				align-items: start

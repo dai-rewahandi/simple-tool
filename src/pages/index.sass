@@ -1,0 +1,25 @@
+@use './src/style/var'
+ul
+	list-style-type: none
+	padding: 0 2em
+	li 
+		color: var.$font_color
+		width: 300px
+		height: 60px
+		display: inline-flex
+		background: var.$semi_gray
+		border-radius: var.$radius
+		a 
+			display: flex
+			align-items: center
+			justify-content: center
+			width: 100%
+			height: 100%
+			text-decoration: none
+			border-radius: var.$radius
+			color: unset
+			transition: all 0.2s ease-in-out
+			&:hover ,&:active
+				background: #e0e0e0
+				transform: translateY(-2px)
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12)
